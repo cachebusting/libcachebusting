@@ -1,0 +1,14 @@
+language: c
+
+compiler:
+  - gcc
+  - clang
+
+install:
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install dejagnu
+
+script:
+  - ./configure
+  - make
+  - make check

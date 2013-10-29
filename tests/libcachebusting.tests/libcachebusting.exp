@@ -1,0 +1,2 @@
+set test "Small test"
+pass "$test"
