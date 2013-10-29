@@ -9,6 +9,7 @@ install:
   - sudo apt-get -qq install dejagnu
 
 script:
+  - ./autogen.sh
   - ./configure
   - make
   - make check
