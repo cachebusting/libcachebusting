@@ -4,8 +4,6 @@ set test "item_test"
 set test_flags ""
 
 set prefix "$srcdir/$subdir"
-set res [target_compile $prefix/$test.c $prefix/$test executable "$test_flags"]
-print $res
 
 if { [host_execute "$prefix/$test"] != "" } {
 	perror "$test had an execution error" 0	
