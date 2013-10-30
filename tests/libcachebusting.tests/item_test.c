@@ -4,13 +4,12 @@
 
 int main(void) {
 	cb_item* item = NULL;
-/*	item = cb_item_create("foo.c", "1234");*/
+	item = cb_item_create("foo.c", "1234");
 	if (item == NULL) {
 		fail("fail to create item");
 	} else {
 		pass("Item created successfully");
 	}
-	pass("foo");
 	totals();
 	return 0;
 }
