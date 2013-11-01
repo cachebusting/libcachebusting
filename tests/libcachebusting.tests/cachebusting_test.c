@@ -32,7 +32,7 @@ void main (void) {
 
 	cb_shutdown();
 
-	if (strncmp("cb", config->prefix, 2) != 0) {
+	if (strncmp("cb", config->prefix, 2) == 0) {
 		fail("Fail in cb_shutdown");
 	} else {
 		pass("Correctly cleaned up");
