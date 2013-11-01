@@ -4,8 +4,10 @@
 typedef struct _cb_item {
 	char* filename;
 	char* hash;
+	unsigned long timestamp;
 } cb_item;
 
 cb_item* cb_item_create(const char*, const char*);
+void cb_item_destoy(cb_item*);
 
 #endif

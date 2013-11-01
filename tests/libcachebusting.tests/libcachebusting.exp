@@ -1,10 +1,14 @@
 load_lib dejagnu.exp
 
-set test "item_test"
-set test_flags ""
+set dir [pwd]
+set prefix $srcdir/$subdir
+cd $prefix
+print "Switched to directory $prefix"
 
-set prefix "$srcdir/$subdir"
-
-if { [host_execute "$prefix/$test"] != "" } {
-	perror "$test had an execution error" 0	
+set tests [glob *.c]
+foreach test $tests {
+	set executable [string trimright $test ".c"]
+	print "Running test: $executable"
+	host_execute "./$executable"
 }
+cd $dir

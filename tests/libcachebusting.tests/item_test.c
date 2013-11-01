@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <dejagnu.h>
+#include "../dejagnu.h"
 #include "../../src/item.h"
 
 int main(void) {
@@ -10,6 +10,25 @@ int main(void) {
 	} else {
 		pass("Item created successfully");
 	}
-	totals();
+
+	if(strncmp("foo.c", item->filename, strlen("foo.c")) == 0) {
+		pass("Filename correct");
+	} else {
+		fail("Filename incorrect");
+	}
+	
+	if(strncmp("1234", item->hash, strlen("1234")) == 0) {
+		pass("hash correct");
+	} else {
+		fail("hash incorrect");
+	}
+
+	cb_item_destroy(item);
+	if (strncmp("foo.c", item->filename, strlen("foo.c")) == 0) {
+		fail("Fail freeing");
+	} else {
+		pass("Succeed freeing");
+	}
+
 	return 0;
 }
