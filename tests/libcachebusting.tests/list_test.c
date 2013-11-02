@@ -9,6 +9,13 @@ void main(void) {
 	} else {
 		fail("List not created");
 	}
+
+	if (list->max == 1000) {
+		pass("Max initialisation works");
+	} else {
+		fail("Max initialisation doesn't work");
+	}
+
 	cb_item* item = NULL;
 	item = cb_item_create("test1", "12345");
 	cb_list_push(list, item);
@@ -45,6 +52,40 @@ void main(void) {
 		fail("One of thousand elements fails");
 	} else {
 		pass("Thousand elements are fine");
+	}
+
+	cb_list_clear(list);
+	cb_list_destroy(list);
+
+	if (list->max != 1000) {
+		pass("Destroy works");
+	} else {
+		fail("Destroy fails");
+	}
+	
+	list = cb_list_create(sizeof(cb_item), 10);
+
+	for( i = 0; i < 100; i++) {
+		cb_list_push(list, cb_item_create("foo", "bar"));
+	}
+
+	if (list->end == 100) {
+		pass("Dynamic resize passed");
+	} else {
+		fail("Dynamic resize failed");
+	}
+
+	fails = 0;
+	for (i = 0; i < 100; i++) {
+		if(strncmp("foo", list->items[i]->filename, 3) != 0 || strncmp("bar", list->items[i]->hash, 3)) {
+			fails++;
+		}
+	}
+
+	if (fails) {
+		fail("One of 100 dynamic allocates failes");
+	} else {
+		pass("100 dynamic allocates passes");
 	}
 
 }
