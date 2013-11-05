@@ -1,6 +1,10 @@
 #ifndef __cb_list_h
 #define __cb_list_h
 
+#ifdef __cplusplus
+extern "C"
+#endif
+
 #include "item.h"
 #include <stdlib.h>
 
@@ -29,5 +33,8 @@ static inline cb_item* cb_list_remove(cb_list* list, int i) {
 	return item;
 }
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif
