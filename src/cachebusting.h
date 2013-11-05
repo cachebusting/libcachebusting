@@ -2,7 +2,7 @@
 #define __cachebusting_h
 
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
 
 #define MEMORY 0

@@ -2,7 +2,7 @@
 #define __cb_item_h
 
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
 
 typedef struct _cb_item {

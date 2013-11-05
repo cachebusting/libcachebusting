@@ -2,7 +2,7 @@
 #define __cb_list_h
 
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
 
 #include "item.h"
