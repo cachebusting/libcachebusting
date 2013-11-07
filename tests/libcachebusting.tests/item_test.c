@@ -24,7 +24,7 @@ int main(void) {
 	}
 
 	cb_item_destroy(item);
-	if (strncmp("foo.c", item->filename, strlen("foo.c")) == 0) {
+	if (item->filename) {
 		fail("Fail freeing");
 	} else {
 		pass("Succeed freeing");

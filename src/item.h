@@ -9,6 +9,7 @@ typedef struct _cb_item {
 	char* filename;
 	char* hash;
 	unsigned long timestamp;
+	struct _cb_item *next;
 } cb_item;
 
 cb_item* cb_item_create(const char*, const char*);
