@@ -6,9 +6,74 @@ cd $prefix
 print "Switched to directory $prefix"
 
 set tests [glob *.c]
+set suite_passed 0
+set suite_failed 0
+set passed 0
+set failed 0
+set output ""
+
+set underlined [binary format a4 \x1b\x5b\x34\x6d]
+set bgreen [binary format a5 \x1b\x5b\x34\x32\x6d]
+set bred [binary format a5 \x1b\x5b\x34\x31\x6d]
+
+set green [binary format a5 \x1b\x5b\x33\x32\x6d]
+set red [binary format a5 \x1b\x5b\x33\x31\x6d]
+set reset [binary format a4 \x1b\x5b\x30\x6d]
+
+set fails []
+set passes []
+
 foreach test $tests {
 	set executable [string trimright $test ".c"]
-	print "Running test: $executable"
-	host_execute "./$executable"
+	print "${underlined}Running test: $executable${reset}"
+	
+	spawn "./$executable"
+	expect {
+		-re "PASSED:${text}*" {
+			incr suite_passed
+			incr passed
+			lappend passes "\t$expect_out(0,string)"
+			exp_continue
+		}
+		-re "FAILED:${text}*" {
+			incr suite_failed
+			incr failed
+			lappend fails "\t$expect_out(0,string)\n"
+			exp_continue
+		}
+		eof {
+			foreach passmsg $passes {
+				set content [regsub -all {PASSED} $passmsg "${green}PASSED${reset}"]
+				pass "$passmsg"
+				print "$content"
+			}
+			foreach failmsg $fails {
+				set content [regsub -all {FAILED} $failmsg "${red}FAILED${reset}"]
+				fail "$content"
+			}
+			set fails []
+			set passes []
+			print ""
+			print "Passes: $suite_passed"
+			print "Failed: $suite_failed"
+			set suite_passed 0
+			set suite_failed 0
+#			print "EOF - $executable"
+#			set content "\t$expect_out(0,string)\n"
+#set content [regsub -all {FAILED} $content "${red}FAILED${reset}"]
+#			append output $content
+		}
+	}
 }
+
+print ""
+
+if { $failed > 0 } {
+	print "${bred}Passed Tests:	$passed"
+	print "Failed Tests:	$failed${reset}"
+} else {
+	print "${bgreen}Passed Tests:	$passed"
+	print "Failed Tests:	$failed${reset}"
+}
+
 cd $dir
