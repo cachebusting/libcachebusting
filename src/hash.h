@@ -16,9 +16,9 @@ typedef struct _cb_hash {
 
 cb_hash* hash_create(int size);						/* Allocate hashtable size  */
 void hash_destroy(cb_hash *ht);						/* Free hashtable memory */
-cb_item* hash_get(cb_hash *ht, char* key);			/* Retrieve entry */
+cb_item* hash_get(cb_hash *ht, const char* key);	/* Retrieve entry */
 void hash_set(cb_hash* ht, cb_item* value);			/* Store entry */
-void hash_remove(cb_hash* ht, char* key);			/* Remove entry*/
+void hash_remove(cb_hash* ht, const char* key);		/* Remove entry*/
 
 #ifdef __cplusplus
 }

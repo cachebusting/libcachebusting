@@ -5,20 +5,19 @@
 extern "C" {
 #endif
 
-#define MEMORY 0
-#define REDIS 1
-#define MONGO 2
+#include "item.h"
 
 typedef struct _cb_config {
-	char storage;
 	int cache_lifetime;
 	int revalidate_lifetime;
 	char* prefix;
 } cb_config;
 
-int cb_init(void);
-int cb_shutdown(void);
-cb_config* cb_get_config(void);
+extern int cb_init(void);
+extern int cb_shutdown(void);
+extern cb_config* cb_get_config(void);
+extern int cb_add(cb_item*);
+extern cb_item* cb_get(const char*);
 
 #ifdef __cplusplus
 }

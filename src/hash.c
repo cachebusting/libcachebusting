@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "hash.h"
 
-unsigned long _hash(char *key) {
+unsigned long _hash(const char *key) {
 	unsigned long hash = 5381;
 	int c;
 
@@ -45,7 +45,7 @@ void hash_destroy(cb_hash* hash) {
 /* }}} */
 
 /* {{{ Get item from hashtable */
-cb_item* hash_get(cb_hash* hash, char* key) {
+cb_item* hash_get(cb_hash* hash, const char* key) {
 	if (!hash) 
 		return NULL;
 
@@ -79,7 +79,7 @@ void hash_set(cb_hash* hash, cb_item *value) {
 /* }}} */
 
 /* {{{ Remove entry from hashtable */
-void hash_remove(cb_hash* hash, char* key) {
+void hash_remove(cb_hash* hash, const char* key) {
 	if (!hash) 
 		return;
 

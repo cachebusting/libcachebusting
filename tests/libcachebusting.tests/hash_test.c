@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "../dejagnu.h"
 #include "../../src/hash.h"
 #include "../../src/item.h"
 
-void main(void) {
+int main(void) {
 	cb_hash *hashtable = NULL;
 	hashtable =	hash_create(200);
 	if (hashtable != NULL) {
@@ -34,4 +35,14 @@ void main(void) {
 	cb_hash *table = hash_create(2);
 	hash_set(table, cb_item_create("1", "foo"));
 	hash_set(table, cb_item_create("2", "foo"));
+	hash_set(table, cb_item_create("3", "foo"));
+	
+	cb_item* testitem = hash_get(table, "3");
+	if (strncmp(testitem->hash, "foo", 3) == 0) {
+		pass("Dynamic resize successful");
+	} else {
+		fail("Dynamic resize failed");
+	}
+
+	return EXIT_SUCCESS;
 }
