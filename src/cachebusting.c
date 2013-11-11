@@ -91,7 +91,6 @@ extern char* cb_rewrite(char* content) {
 	int length = strlen(content);
 	int pos = 0;
 	char delimiter;
-	char* foo = "bar";
 
 	cb_matches* matches = cb_matches_create();;
 	findString = content;
