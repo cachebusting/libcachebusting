@@ -34,13 +34,12 @@ void hash_destroy(cb_hash* hash) {
 		while (item) {
 			cb_item *old_item = item;
 			item = item->next;
-			free(old_item);
+			cb_item_destroy(old_item);
 		}
 	}
 
 	free(hash->table);
 	free(hash);
-	hash = NULL;
 }
 /* }}} */
 

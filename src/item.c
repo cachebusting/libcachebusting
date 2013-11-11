@@ -19,12 +19,7 @@ cb_item* cb_item_create(const char* filename, const char* hash) {
 }
 
 void cb_item_destroy(cb_item* item) {
-	free(item->filename);
-	item->filename = NULL;
-	
-	free(item->hash);
-	item->hash = NULL;
-	
+	if (item->filename != NULL)	free(item->filename);
+	if (item->hash != NULL) free(item->hash);
 	free(item);
-	item = NULL;
 }

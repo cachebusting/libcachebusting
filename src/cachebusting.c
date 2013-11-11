@@ -160,9 +160,9 @@ extern char* cb_rewrite(char* content) {
 
 /* {{{ Free allocated memory */
 extern int cb_shutdown() {
+	hash_destroy(hash);
 	free(cachebusting_config->prefix);
 	free(cachebusting_config);
-	hash_destroy(hash);
 
 	return 1;
 } 

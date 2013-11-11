@@ -56,7 +56,7 @@ int main (void) {
 
 	cb_shutdown();
 
-	if (strncmp("cb", config->prefix, 2) == 0) {
+	if (!config) {
 		fail("Fail in cb_shutdown");
 	} else {
 		pass("Correctly cleaned up");
@@ -66,6 +66,7 @@ int main (void) {
 	cb_add(cb_item_create("foo", "bar"));
 	const char* content = "kasdldadsm <img src='foo'/>";
 	char* result = cb_rewrite(content);
+	cb_shutdown();
 	
 	if(strlen(result) > strlen(content)) {
 		if (strncmp("kasdldadsm <img src='foo;cbbar'/>", result, strlen("kasdldadsm <img src='foo;cbbar'/>")) == 0) {
@@ -76,11 +77,13 @@ int main (void) {
 	} else {
 		fail("Simple rewrite failed");
 	}
-	cb_shutdown();
+	free(result);
 
 	cb_init();
-	cb_add(cb_item_create("/i/am/a/test.png", "123456"));
-	cb_add(cb_item_create("/i/am/a/test2.png", "654321"));
+	cb_item* item1 = cb_item_create("/i/am/a/test.png", "123456");
+	cb_item* item2 = cb_item_create("/i/am/a/test2.png", "654321");
+	cb_add(item1);
+	cb_add(item2);
 	const char* bigcontent = "<!doctype html> \
 		<html> \
 		<head> \
@@ -191,6 +194,7 @@ int main (void) {
 	} else {
 		fail("Simple rewrite failed");
 	}
+	free(bigresult);
 	cb_shutdown();
 
 	return EXIT_SUCCESS;

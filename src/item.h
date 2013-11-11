@@ -13,7 +13,7 @@ typedef struct _cb_item {
 } cb_item;
 
 cb_item* cb_item_create(const char*, const char*);
-void cb_item_destoy(cb_item*);
+void cb_item_destroy(cb_item*);
 
 #ifdef __cplusplus
 }
