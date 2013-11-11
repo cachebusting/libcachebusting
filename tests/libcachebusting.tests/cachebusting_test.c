@@ -62,5 +62,136 @@ int main (void) {
 		pass("Correctly cleaned up");
 	}
 
+	cb_init();
+	cb_add(cb_item_create("foo", "bar"));
+	const char* content = "kasdldadsm <img src='foo'/>";
+	char* result = cb_rewrite(content);
+	
+	if(strlen(result) > strlen(content)) {
+		if (strncmp("kasdldadsm <img src='foo;cbbar'/>", result, strlen("kasdldadsm <img src='foo;cbbar'/>")) == 0) {
+			pass("Very simple rewrite passed");
+		} else {
+			fail("Simple rewrite failed");
+		}
+	} else {
+		fail("Simple rewrite failed");
+	}
+	cb_shutdown();
+
+	cb_init();
+	cb_add(cb_item_create("/i/am/a/test.png", "123456"));
+	cb_add(cb_item_create("/i/am/a/test2.png", "654321"));
+	const char* bigcontent = "<!doctype html> \
+		<html> \
+		<head> \
+		    <title>Example Domain</title> \
+			\
+			    <meta charset=\"utf-8\" /> \
+				    <meta http-equiv=\"Content-type\" content=\"text/html; charset=utf-8\" /> \
+					    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" /> \
+						    <style type=\"text/css\"> \
+							    body { \
+								        background-color: #f0f0f2; \
+								        margin: 0; \
+								        padding: 0; \
+								        font-family: \"Open Sans\", \"Helvetica Neue\", Helvetica, Arial, sans-serif; \
+								        \
+								    } \
+	    div { \
+		        width: 600px; \
+		        margin: 5em auto; \
+		        padding: 50px; \
+		        background-color: #fff; \
+		        border-radius: 1em; \
+		    } \
+		    a:link, a:visited { \
+			          color: #38488f; \
+			          text-decoration: none; \
+			      } \
+			      @media (max-width: 700px) { \
+				          body { \
+						              background-color: #fff; \
+						          } \
+				          div { \
+						              width: auto; \
+						              margin: 0 auto; \
+						              border-radius: 0; \
+						              padding: 1em; \
+						          } \
+				      } \
+				      </style>     \
+						  </head> \
+						   \
+						  <body> \
+						  <div> \
+						      <h1>Example Domain</h1> \
+							      <p><img src=\"/i/am/a/test.png\"/>This domain is established to be used for illustrative examples in documents. You may use this \
+								      domain in examples without prior coordination or asking for permission.<img src=\"/i/am/a/test2.png\"/>/p> \
+									      <p><a href=\"http://www.iana.org/domains/example\">More information...</a></p> \
+										  </div> \
+										  </body> \
+										  </html>";
+	const char* expectedresult = "<!doctype html> \
+		<html> \
+		<head> \
+		    <title>Example Domain</title> \
+			\
+			    <meta charset=\"utf-8\" /> \
+				    <meta http-equiv=\"Content-type\" content=\"text/html; charset=utf-8\" /> \
+					    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" /> \
+						    <style type=\"text/css\"> \
+							    body { \
+								        background-color: #f0f0f2; \
+								        margin: 0; \
+								        padding: 0; \
+								        font-family: \"Open Sans\", \"Helvetica Neue\", Helvetica, Arial, sans-serif; \
+								        \
+								    } \
+	    div { \
+		        width: 600px; \
+		        margin: 5em auto; \
+		        padding: 50px; \
+		        background-color: #fff; \
+		        border-radius: 1em; \
+		    } \
+		    a:link, a:visited { \
+			          color: #38488f; \
+			          text-decoration: none; \
+			      } \
+			      @media (max-width: 700px) { \
+				          body { \
+						              background-color: #fff; \
+						          } \
+				          div { \
+						              width: auto; \
+						              margin: 0 auto; \
+						              border-radius: 0; \
+						              padding: 1em; \
+						          } \
+				      } \
+				      </style>     \
+						  </head> \
+						   \
+						  <body> \
+						  <div> \
+						      <h1>Example Domain</h1> \
+							      <p><img src=\"/i/am/a/test.png;cb123456\"/>This domain is established to be used for illustrative examples in documents. You may use this \
+								      domain in examples without prior coordination or asking for permission.<img src=\"/i/am/a/test2.png;cb654321\"/>/p> \
+									      <p><a href=\"http://www.iana.org/domains/example\">More information...</a></p> \
+										  </div> \
+										  </body> \
+										  </html>";
+	char* bigresult = cb_rewrite(bigcontent);
+	if(strlen(bigresult) > strlen(bigcontent)) {
+		if (strncmp(bigresult, expectedresult, strlen(expectedresult)) == 0) {
+			pass("Complex rewrite passed");
+		} else {
+			fail("Complex rewrite failed");
+		}
+	} else {
+		fail("Simple rewrite failed");
+	}
+	cb_shutdown();
+
 	return EXIT_SUCCESS;
 }
