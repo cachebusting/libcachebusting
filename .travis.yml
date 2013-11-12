@@ -7,6 +7,7 @@ install:
   - sudo apt-get -qq update
   - sudo apt-get -qq install dejagnu
   - sudo apt-get -qq install valgrind
+  - whereis valgrind
 
 script:
   - ./autogen.sh
