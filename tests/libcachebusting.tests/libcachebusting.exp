@@ -72,16 +72,11 @@ set valgrindsuccess 1
 foreach test $tests {
 	set executable [string trimright $test ".c"]
 	spawn /usr/bin/valgrind --gen-suppressions=yes --leak-check=full [pwd]/$executable
-	set testfail 1
+	set testfail 0
 	expect {
-		-re "All heap blocks were freed" {
-			set testfail 0
-		}
-		eof {
-			if { $testfail == 1 } {
-				set valgrindsuccess 0
-				lappend valgrindoutput "$expect_out(buffer)"
-			}
+		-re "definitely lost" {
+			set valgrindsuccess 0
+			lappend valgrindoutput "$expect_out(buffer)"
 		}
 	}
 }
