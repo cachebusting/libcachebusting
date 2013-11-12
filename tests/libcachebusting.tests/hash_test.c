@@ -30,7 +30,6 @@ int main(void) {
 		fail("Put and Get retrieved different elements");
 	}
 	hash_destroy(hashtable);
-	cb_item_destroy(foo);
 
 	return EXIT_SUCCESS;
 }

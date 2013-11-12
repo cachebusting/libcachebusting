@@ -68,9 +68,7 @@ void hash_set(cb_hash* hash, cb_item *value) {
 
 	unsigned long id = _hash(value->filename) % hash->size;
 
-	cb_item *item = calloc(1, sizeof(cb_item));
-	item->hash = value->hash;
-	item->filename = value->filename;
+	cb_item *item = value;
 
 	item->next = hash->table[id];
 	hash->table[id] = item;

@@ -22,4 +22,5 @@ void cb_item_destroy(cb_item* item) {
 	if (item->filename != NULL)	free(item->filename);
 	if (item->hash != NULL) free(item->hash);
 	free(item);
+	item = NULL;
 }

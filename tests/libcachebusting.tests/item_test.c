@@ -24,11 +24,6 @@ int main(void) {
 	}
 
 	cb_item_destroy(item);
-	if (item->filename) {
-		fail("Fail freeing");
-	} else {
-		pass("Succeed freeing");
-	}
 
 	return 0;
 }

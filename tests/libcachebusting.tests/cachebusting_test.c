@@ -56,12 +56,6 @@ int main (void) {
 
 	cb_shutdown();
 
-	if (!config) {
-		fail("Fail in cb_shutdown");
-	} else {
-		pass("Correctly cleaned up");
-	}
-
 	cb_init();
 	cb_add(cb_item_create("foo", "bar"));
 	const char* content = "kasdldadsm <img src='foo'/>";
