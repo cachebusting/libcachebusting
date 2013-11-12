@@ -6,6 +6,7 @@ compiler:
 install:
   - sudo apt-get -qq update
   - sudo apt-get -qq install dejagnu
+  - sudo apt-get -qq install valgrind
 
 script:
   - ./autogen.sh
