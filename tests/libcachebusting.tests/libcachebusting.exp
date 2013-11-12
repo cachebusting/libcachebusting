@@ -71,7 +71,8 @@ set valgrindsuccess 1
 
 foreach test $tests {
 	set executable [string trimright $test ".c"]
-	spawn /usr/bin/valgrind --gen-suppressions=yes --leak-check=full [pwd]/$executable
+	set path [pwd]/$executable
+	spawn /usr/bin/valgrind --gen-suppressions=yes --leak-check=full $path
 	set testfail 0
 	expect {
 		-re "definitely lost" {
