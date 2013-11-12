@@ -23,7 +23,7 @@ int main(void) {
 		fail("hash incorrect");
 	}
 
-	cb_item_destroy(item);
+	/*cb_item_destroy(item);*/
 
 	return 0;
 }
