@@ -79,8 +79,11 @@ foreach test $tests {
 			set valgrindsuccess 0
 			lappend valgrindoutput "$expect_out(buffer)"
 		}
+		eof {
+			lappend valgrindoutput "$expect_out(buffer)"
+		}
 	}
-	lappend valgrindoutput "$expect_out(buffer)"
+#	lappend valgrindoutput "$expect_out(buffer)"
 }
 
 if { $valgrindsuccess == 1 } {
