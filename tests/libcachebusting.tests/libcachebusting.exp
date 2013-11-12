@@ -26,7 +26,7 @@ set passes []
 foreach test $tests {
 	set executable [string trimright $test ".c"]
 	print "${underlined}Running test: $executable${reset}"
-	
+
 	spawn "./$executable"
 	expect {
 		-re "PASSED:${text}*" {
@@ -53,27 +53,44 @@ foreach test $tests {
 			}
 			set fails []
 			set passes []
-			print ""
-			print "Passes: $suite_passed"
-			print "Failed: $suite_failed"
+#			print ""
+#			print "Passes: $suite_passed"
+#			print "Failed: $suite_failed"
 			set suite_passed 0
 			set suite_failed 0
-#			print "EOF - $executable"
-#			set content "\t$expect_out(0,string)\n"
-#set content [regsub -all {FAILED} $content "${red}FAILED${reset}"]
-#			append output $content
 		}
 	}
 }
 
-print ""
+print "${underlined}Running tests with valgrind${reset}"
+cd $dir
+cd $srcdir/$subdir/.libs
 
-if { $failed > 0 } {
-	print "${bred}Passed Tests:	$passed"
-	print "Failed Tests:	$failed${reset}"
+set valgrindoutput ""
+set valgrindsuccess 1
+
+foreach test $tests {
+	set executable [string trimright $test ".c"]
+	spawn /usr/bin/valgrind --gen-suppressions=yes --leak-check=full [pwd]/$executable
+	set testfail 1
+	expect {
+		-re "All heap blocks were freed" {
+			set testfail 0
+		}
+		eof {
+			if { $testfail == 1 } {
+				set valgrindsuccess 0
+				lappend valgrindoutput "$expect_out(buffer)"
+			}
+		}
+	}
+}
+
+if { $valgrindsuccess == 1 } {
+	print "\t${green}PASSED: Your tests don't leak!${reset}"	
 } else {
-	print "${bgreen}Passed Tests:	$passed"
-	print "Failed Tests:	$failed${reset}"
+	fail "${red}Your tests leak!${reset}"	
+	print $valgrindoutput
 }
 
 cd $dir
