@@ -79,10 +79,12 @@ foreach test $tests {
 			lappend valgrindoutput "$expect_out(buffer)"
 		}
 	}
+	lappend valgrindoutput "$expect_out(buffer)"
 }
 
 if { $valgrindsuccess == 1 } {
 	print "\t${green}PASSED: Your tests don't leak!${reset}"	
+	print $valgrindoutput
 } else {
 	fail "${red}Your tests leak!${reset}"	
 	print $valgrindoutput
