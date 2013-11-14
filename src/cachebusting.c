@@ -52,7 +52,7 @@ extern int cb_init(void) {
 	cachebusting_config->revalidate_lifetime = 300;
 
 	cachebusting_config->prefix = (char*)malloc(3);
-	strncpy(cachebusting_config->prefix, "cb", 2);
+	strncpy(cachebusting_config->prefix, "cb", 3);
 
 	return 1;
 }
@@ -93,9 +93,8 @@ extern char* cb_rewrite(char* content) {
 	char delimiter;
 
 	cb_matches* matches = cb_matches_create();;
-	findString = content;
-	tmpString = content;
-	catString = content;
+	findString = tmpString = catString = content;
+	
 	while(1) {
 		findString = strstr(findString, "img");
 		if (findString == NULL) break;
@@ -137,13 +136,14 @@ extern char* cb_rewrite(char* content) {
 		return content;
 
 	int end = 0, newlen;
-	newlen = length + (matches->count*9)+1;
+	newlen = length + (matches->count * (HASH_LEN + strlen(cachebusting_config->prefix)+1))+1;
 	char *new_content = calloc(1, newlen);
 	cb_match* match = matches->first;
 	while(1) {
 		strncat(new_content, catString, match->pos);
-		strncat(new_content, ";cb", 3);
-		strncat(new_content, match->hash, strlen(match->hash) < 6 ? strlen(match->hash) : 6);
+		strncat(new_content, ";", 1);
+		strncat(new_content, cachebusting_config->prefix, strlen(cachebusting_config->prefix));
+		strncat(new_content, match->hash, strlen(match->hash) < HASH_LEN ? strlen(match->hash) : HASH_LEN);
 		catString += match->pos;
 		end += match->pos;
 		if (!match->next) break;

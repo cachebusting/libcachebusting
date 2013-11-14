@@ -7,6 +7,8 @@ extern "C" {
 
 #include "item.h"
 
+#define HASH_LEN 6
+
 typedef struct _cb_config {
 	int cache_lifetime;
 	int revalidate_lifetime;
