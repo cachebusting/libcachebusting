@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 int main (void) {
-	cb_config* config = cb_init();
+	cb_config* config = cb_init("cb");
 
 	if (config->cache_lifetime == 864000) {
 		pass("Default cache lifetime");
@@ -54,7 +54,7 @@ int main (void) {
 
 	cb_shutdown(config);
 
-	config = cb_init();
+	config = cb_init("cb");
 	cb_add(config->hashtable, cb_item_create("foo", "bar"));
 	const char* content = "kasdldadsm <img src='foo'/>";
 	char* result = cb_rewrite(config, content);
@@ -71,7 +71,7 @@ int main (void) {
 	}
 	free(result);
 
-	config = cb_init();
+	config = cb_init("cb");
 	cb_item* item1 = cb_item_create("/i/am/a/test.png", "123456");
 	cb_item* item2 = cb_item_create("/i/am/a/test2.png", "654321");
 	cb_add(config->hashtable, item1);

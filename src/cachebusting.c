@@ -41,15 +41,15 @@ static void cb_matches_destroy(cb_matches *matches) {
 /* }}} */
 
 /* {{{ Initialize cache busting */
-extern cb_config* cb_init(void) { 
+extern cb_config* cb_init(const char* prefix) { 
 	cb_config* cachebusting_config = (cb_config*)malloc(sizeof(cb_config));
 	cachebusting_config->hashtable = hash_create(200);
 
 	cachebusting_config->cache_lifetime = 864000;
 	cachebusting_config->revalidate_lifetime = 300;
 
-	cachebusting_config->prefix = (char*)malloc(3);
-	strncpy(cachebusting_config->prefix, "cb", 3);
+	cachebusting_config->prefix = (char*)malloc(strlen(prefix)+1);
+	strncpy(cachebusting_config->prefix, prefix, strlen(prefix)+1);
 
 	return cachebusting_config;
 }

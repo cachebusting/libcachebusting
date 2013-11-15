@@ -34,7 +34,7 @@ static cb_matches* cb_matches_create(void);
 static void cb_match_add(cb_matches*, int, char*);
 static void cb_matches_destroy(cb_matches*);
 
-extern cb_config* cb_init(void);
+extern cb_config* cb_init(const char*);
 extern int cb_shutdown(cb_config*);
 extern int cb_add(cb_hash*, cb_item*);
 extern cb_item* cb_get(cb_hash*, const char*);
