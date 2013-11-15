@@ -3,9 +3,7 @@
 #include <stdlib.h>
 
 int main (void) {
-	cb_init();
-	cb_config* config;
-	config = cb_get_config();
+	cb_config* config = cb_init();
 
 	if (config->cache_lifetime == 864000) {
 		pass("Default cache lifetime");
@@ -30,13 +28,13 @@ int main (void) {
 	for(i = 0; i < 100; i++) {
 		sprintf(buffer, "%d", i);
 		cb_item* item = cb_item_create(buffer, "test");
-		cb_add(item);
+		cb_add(config->hashtable, item);
 	}
 
 	int fails = 0;
 	for(i = 0; i < 100; i++) {
 		sprintf(buffer, "%d", i);
-		cb_item* item = cb_get(buffer);
+		cb_item* item = cb_get(config->hashtable, buffer);
 		if(strncmp("test", item->hash, 4) != 0) {
 			fails++;
 		}
@@ -47,20 +45,20 @@ int main (void) {
 		pass("Retrieved same items");
 	}
 
-	cb_item* item = cb_get("test");
+	cb_item* item = cb_get(config->hashtable, "test");
 	if (item == NULL) {
 		pass("Expected missed value");
 	} else {
 		fail("Unexpected missed value");
 	}
 
-	cb_shutdown();
+	cb_shutdown(config);
 
-	cb_init();
-	cb_add(cb_item_create("foo", "bar"));
+	config = cb_init();
+	cb_add(config->hashtable, cb_item_create("foo", "bar"));
 	const char* content = "kasdldadsm <img src='foo'/>";
-	char* result = cb_rewrite(content);
-	cb_shutdown();
+	char* result = cb_rewrite(config, content);
+	cb_shutdown(config);
 	
 	if(strlen(result) > strlen(content)) {
 		if (strncmp("kasdldadsm <img src='foo;cbbar'/>", result, strlen("kasdldadsm <img src='foo;cbbar'/>")) == 0) {
@@ -73,11 +71,11 @@ int main (void) {
 	}
 	free(result);
 
-	cb_init();
+	config = cb_init();
 	cb_item* item1 = cb_item_create("/i/am/a/test.png", "123456");
 	cb_item* item2 = cb_item_create("/i/am/a/test2.png", "654321");
-	cb_add(item1);
-	cb_add(item2);
+	cb_add(config->hashtable, item1);
+	cb_add(config->hashtable, item2);
 	const char* bigcontent = "<!doctype html> \
 		<html> \
 		<head> \
@@ -178,7 +176,7 @@ int main (void) {
 										  </div> \
 										  </body> \
 										  </html>";
-	char* bigresult = cb_rewrite(bigcontent);
+	char* bigresult = cb_rewrite(config, bigcontent);
 	if(strlen(bigresult) > strlen(bigcontent)) {
 		if (strncmp(bigresult, expectedresult, strlen(expectedresult)) == 0) {
 			pass("Complex rewrite passed");
@@ -189,7 +187,7 @@ int main (void) {
 		fail("Simple rewrite failed");
 	}
 	free(bigresult);
-	cb_shutdown();
+	cb_shutdown(config);
 
 	return EXIT_SUCCESS;
 }

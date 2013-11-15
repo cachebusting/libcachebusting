@@ -3,18 +3,15 @@
 #include <string.h>
 #include <stdlib.h>
 
-static cb_hash* hash;
-static cb_config* cachebusting_config;
-
 /* {{{ Create a cb_matches struct */
 static cb_matches* cb_matches_create(void) {
-	return calloc(1, sizeof(struct _cb_matches));
+	return calloc(1, sizeof(cb_matches));
 }
 /* }}} */
 
 /* {{{ Add a match to matches list */
 static void cb_match_add(cb_matches* matches, int pos, char* hash) {
-	cb_match *match = calloc(1, sizeof(struct _cb_match));
+	cb_match *match = calloc(1, sizeof(cb_match));
 	match->hash = hash;
 	match->pos = pos;
 
@@ -38,15 +35,15 @@ static void cb_matches_destroy(cb_matches *matches) {
 		if(cur->prev) free(cur->prev);
 	}
 
-    free(matches->last);
-    free(matches);
+	free(matches->last);
+	free(matches);
 }
 /* }}} */
 
 /* {{{ Initialize cache busting */
-extern int cb_init(void) { 
-	cachebusting_config = (cb_config*)malloc(sizeof(cb_config));
-	hash = hash_create(200);
+extern cb_config* cb_init(void) { 
+	cb_config* cachebusting_config = (cb_config*)malloc(sizeof(cb_config));
+	cachebusting_config->hashtable = hash_create(200);
 
 	cachebusting_config->cache_lifetime = 864000;
 	cachebusting_config->revalidate_lifetime = 300;
@@ -54,24 +51,18 @@ extern int cb_init(void) {
 	cachebusting_config->prefix = (char*)malloc(3);
 	strncpy(cachebusting_config->prefix, "cb", 3);
 
-	return 1;
-}
-/* }}} */
-
-/* {{{ Retrieves cachebusting config */
-extern cb_config* cb_get_config() {
 	return cachebusting_config;
 }
 /* }}} */
 
 /* {{{ Get item from hashtable */
-extern cb_item* cb_get(const char* key) {
+extern cb_item* cb_get(cb_hash* hash, const char* key) {
 	return hash_get(hash, key);
 }
 /* }}} */
 
 /* {{{ Add item to hashtable */
-extern int cb_add(cb_item* item) {
+extern int cb_add(cb_hash* hash, cb_item* item) {
 	hash_set(hash, item);
 
 	return 1;
@@ -85,7 +76,7 @@ extern int cb_add(cb_item* item) {
  * - Script tags (<script src="...">)
  * - Link tags (<link href="...">)
  * */
-extern char* cb_rewrite(char* content) {
+extern char* cb_rewrite(cb_config* cachebusting_config, char* content) {
 	char const *tmpString, *from, *catString;
 	char* findString;
 	int length = strlen(content);
@@ -124,7 +115,7 @@ extern char* cb_rewrite(char* content) {
 		char* str;
 		str = calloc(1, count+1);
 		strncpy(str, from, count);
-		cb_item* item = hash_get(hash, str);
+		cb_item* item = hash_get(cachebusting_config->hashtable, str);
 		if (item != NULL) {
 			cb_match_add(matches, findString - tmpString, item->hash);
 			tmpString = findString;
@@ -158,8 +149,8 @@ extern char* cb_rewrite(char* content) {
 /* }}} */
 
 /* {{{ Free allocated memory */
-extern int cb_shutdown() {
-	hash_destroy(hash);
+extern int cb_shutdown(cb_config* cachebusting_config) {
+	hash_destroy(cachebusting_config->hashtable);
 	free(cachebusting_config->prefix);
 	free(cachebusting_config);
 
