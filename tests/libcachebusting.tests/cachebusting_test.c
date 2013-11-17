@@ -5,7 +5,7 @@
 int main (void) {
 	cb_config* config = cb_init("cb");
 
-	if (config->cache_lifetime == 864000) {
+	if (config->cache_lifetime == 15724800) {
 		pass("Default cache lifetime");
 	} else {
 		fail("Wrong default cache lifetime");

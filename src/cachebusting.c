@@ -45,7 +45,7 @@ extern cb_config* cb_init(const char* prefix) {
 	cb_config* cachebusting_config = (cb_config*)malloc(sizeof(cb_config));
 	cachebusting_config->hashtable = hash_create(200);
 
-	cachebusting_config->cache_lifetime = 864000;
+	cachebusting_config->cache_lifetime = 15724800;
 	cachebusting_config->revalidate_lifetime = 300;
 
 	cachebusting_config->prefix = (char*)malloc(strlen(prefix)+1);
