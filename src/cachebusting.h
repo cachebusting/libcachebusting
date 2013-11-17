@@ -11,7 +11,7 @@ extern "C" {
 #define HASH_LEN 6
 
 typedef struct _cb_config {
-	int cache_lifetime;
+	unsigned int cache_lifetime;
 	int revalidate_lifetime;
 	char* prefix;
 	cb_hash* hashtable;
